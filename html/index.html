@@ -9,16 +9,20 @@
 </head>
 <body>
 
+  <a class="pular-para-conteudo" href="#app">Pular para o conteúdo</a>
+
   <header>
     <a href="#/inicio">
       <img src="../imagens/logo-instituto-semear.png" alt="Logotipo do Instituto Semear" width="64" height="64">
       Instituto Semear
     </a>
 
-    <input type="checkbox" id="abrir-menu" class="alternador-menu">
-    <label for="abrir-menu" class="botao-hamburguer">&#9776; Menu</label>
+    <button type="button" id="botao-menu" class="botao-hamburguer"
+            aria-expanded="false" aria-controls="menu-principal">
+      &#9776; Menu
+    </button>
 
-    <nav aria-label="Navegação principal">
+    <nav id="menu-principal" aria-label="Navegação principal">
       <ul>
         <li><a href="#/inicio" data-rota="inicio">Início</a></li>
 
@@ -40,7 +44,7 @@
   <p id="anuncio-rota" class="apenas-leitor" role="status" aria-live="polite"></p>
 
   <!-- as telas são desenhadas aqui pelo módulo de navegação -->
-  <main id="app"></main>
+  <main id="app" tabindex="-1"></main>
 
   <footer>
     <p>&copy; 2026 Instituto Semear</p>
