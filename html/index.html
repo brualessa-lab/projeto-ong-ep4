@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Instituto Semear</title>
+  <meta name="description" content="O Instituto Semear é uma ONG que atua com educação, alimentação e capacitação profissional em comunidades em situação de vulnerabilidade social.">
+  <link rel="stylesheet" href="../css/estilo.css">
+</head>
+<body>
+
+  <header>
+    <a href="#/inicio">
+      <img src="../imagens/logo-instituto-semear.png" alt="Logotipo do Instituto Semear" width="64" height="64">
+      Instituto Semear
+    </a>
+
+    <input type="checkbox" id="abrir-menu" class="alternador-menu">
+    <label for="abrir-menu" class="botao-hamburguer">&#9776; Menu</label>
+
+    <nav aria-label="Navegação principal">
+      <ul>
+        <li><a href="#/inicio" data-rota="inicio">Início</a></li>
+
+        <li class="tem-submenu">
+          <a href="#/projetos" data-rota="projetos">Projetos sociais</a>
+          <ul class="submenu">
+            <li><a href="#/projetos/semear-letras">Semear Letras</a></li>
+            <li><a href="#/projetos/prato-cheio">Prato Cheio</a></li>
+            <li><a href="#/projetos/semear-oficios">Semear Ofícios</a></li>
+          </ul>
+        </li>
+
+        <li><a href="#/cadastro" data-rota="cadastro">Participe</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- região lida por leitores de tela a cada troca de rota -->
+  <p id="anuncio-rota" class="apenas-leitor" role="status" aria-live="polite"></p>
+
+  <!-- as telas são desenhadas aqui pelo módulo de navegação -->
+  <main id="app"></main>
+
+  <footer>
+    <p>&copy; 2026 Instituto Semear</p>
+  </footer>
+
+
+  <!-- biblioteca externa: IMask, para as máscaras de CPF, telefone e CEP -->
+  <script src="https://cdn.jsdelivr.net/npm/imask@7.6.1/dist/imask.min.js"></script>
+
+  <script type="module" src="../js/main.js"></script>
+
+</body>
+</html>

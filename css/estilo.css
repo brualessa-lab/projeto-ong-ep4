@@ -1,0 +1,613 @@
+/* ============================================================
+   DESIGN SYSTEM - Instituto Semear
+   1. Variáveis   2. Base   3. Layout (Grid)   4. Componentes (Flexbox)
+   ============================================================ */
+
+/* ---------- 1. VARIÁVEIS ---------- */
+
+:root {
+
+  /* Cores primárias (rosa da identidade) */
+  --cor-primaria: #A83D74;
+  --cor-primaria-clara: #E79AC7;
+
+  /* Cores secundárias (verde da identidade) */
+  --cor-secundaria: #2F6B4C;
+  --cor-secundaria-clara: #4C9B72;
+
+  /* Tons neutros */
+  --cor-texto: #1C1B1F;
+  --cor-texto-suave: #3A363F;
+  --cor-borda: #8F8898;
+  --cor-fundo: #FFFFFF;
+  --cor-fundo-alt: #F7F4F8;
+
+  /* Cor de estado */
+  --cor-erro: #B3261E;
+
+  /* Tipografia: escala modular de razão 1,2 a partir de 16px */
+  --fonte-base: "Segoe UI", Arial, Helvetica, sans-serif;
+  --texto-base: 1rem;      /* 16px   - corpo */
+  --texto-md: 1.2rem;      /* 19px   - destaque e legend */
+  --texto-lg: 1.44rem;     /* 23px   - h3 */
+  --texto-xl: 1.728rem;    /* 28px   - h2 */
+  --texto-2xl: 2.074rem;   /* 33px   - h1 */
+  --altura-linha: 1.6;
+
+  /* Espaçamentos: múltiplos de 8px */
+  --espaco-1: 0.5rem;
+  --espaco-2: 1rem;
+  --espaco-3: 1.5rem;
+  --espaco-4: 2rem;
+  --espaco-5: 3rem;
+  --espaco-6: 4rem;
+
+  /* Layout */
+  --largura-maxima: 1080px;
+  --raio: 8px;
+}
+
+/* ---------- 2. BASE ---------- */
+
+/* conteúdo disponível ao leitor de tela e invisível na página */
+.apenas-leitor {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: var(--fonte-base);
+  font-size: var(--texto-base);
+  line-height: var(--altura-linha);
+  color: var(--cor-texto);
+  background-color: var(--cor-fundo);
+}
+
+h1 {
+  font-size: var(--texto-2xl);
+  color: var(--cor-primaria);
+  margin: 0 0 var(--espaco-2);
+}
+
+h2 {
+  font-size: var(--texto-xl);
+  color: var(--cor-texto);
+  margin: 0 0 var(--espaco-2);
+  padding-bottom: var(--espaco-1);
+  border-bottom: 2px solid var(--cor-primaria);
+}
+
+h3 {
+  font-size: var(--texto-lg);
+  color: var(--cor-secundaria);
+  margin: 0 0 var(--espaco-1);
+}
+
+p { margin: 0 0 var(--espaco-2); }
+
+a { color: var(--cor-primaria); }
+a:hover, a:focus { color: var(--cor-secundaria); }
+
+ul { margin: 0 0 var(--espaco-2); padding-left: var(--espaco-3); }
+
+/* ---------- 3. LAYOUT MACRO: GRID DE 12 COLUNAS ---------- */
+
+header,
+main,
+footer {
+  max-width: var(--largura-maxima);
+  margin: 0 auto;
+  padding: var(--espaco-3);
+}
+
+main {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--espaco-4);
+  padding-block: var(--espaco-4);
+}
+
+/* por padrão cada bloco ocupa a largura toda da grade */
+main > * { grid-column: span 12; }
+
+/* o gap da grade já separa os blocos: zeramos as margens dos filhos diretos */
+main > h1,
+main > p { margin-bottom: 0; }
+
+/* a frase de apoio abaixo do h1 fica colada nele */
+main > h1 + p {
+  margin-top: calc(var(--espaco-4) * -1 + var(--espaco-2));
+  padding-left: var(--espaco-2);
+  border-left: 4px solid var(--cor-primaria-clara);
+  font-size: var(--texto-md);
+  line-height: 1.5;
+  color: var(--cor-texto-suave);
+  max-width: 52ch;
+}
+
+/* seções de cartões viram uma grade interna de 12 colunas */
+.grade-cards {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: var(--espaco-3);
+}
+
+.grade-cards > h2 { grid-column: span 12; }
+
+.grade-cards > section,
+.grade-cards > article {
+  grid-column: span 12;
+}
+
+/* ---------- 4. COMPONENTES (FLEXBOX) ---------- */
+
+/* cabeçalho: logotipo à esquerda, menu à direita */
+header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--espaco-2);
+  border-bottom: 1px solid var(--cor-borda);
+}
+
+header > a {
+  display: flex;
+  align-items: center;
+  gap: var(--espaco-1);
+  font-size: var(--texto-md);
+  font-weight: bold;
+  color: var(--cor-primaria);
+  text-decoration: none;
+}
+
+/* --- NAVEGAÇÃO: base mobile com menu hambúrguer --- */
+
+/* o checkbox fica fora da tela, mas continua acessível pelo teclado */
+.alternador-menu {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.botao-hamburguer {
+  padding: var(--espaco-1) var(--espaco-2);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+  color: var(--cor-texto);
+  cursor: pointer;
+  user-select: none;
+}
+
+.alternador-menu:focus-visible + .botao-hamburguer {
+  outline: 2px solid var(--cor-primaria);
+  outline-offset: 2px;
+}
+
+/* o menu ocupa a linha inteira e começa fechado */
+nav {
+  flex-basis: 100%;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+/* o checkbox marcado abre o menu */
+.alternador-menu:checked ~ nav {
+  max-height: 30rem;
+}
+
+nav ul {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+nav a {
+  display: block;
+  padding: var(--espaco-1) var(--espaco-2);
+  border-radius: var(--raio);
+  text-decoration: none;
+  color: var(--cor-texto);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+nav a:hover,
+nav a:focus {
+  background-color: var(--cor-fundo-alt);
+  color: var(--cor-primaria);
+}
+
+nav a[aria-current="page"] {
+  background-color: var(--cor-primaria);
+  color: var(--cor-fundo);
+}
+
+/* no celular o submenu aparece recuado, como lista aninhada */
+.submenu {
+  padding-left: var(--espaco-3);
+}
+
+.submenu a {
+  font-size: var(--texto-base);
+  color: var(--cor-texto-suave);
+}
+
+/* cartões */
+.grade-cards > section,
+.grade-cards > article {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--cor-fundo-alt);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+  padding: var(--espaco-3);
+}
+
+.grade-cards p:last-child { margin-bottom: 0; }
+
+/* formulário */
+fieldset {
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+  margin: 0 0 var(--espaco-4);
+  padding: var(--espaco-3);
+}
+
+legend {
+  font-size: var(--texto-md);
+  font-weight: bold;
+  color: var(--cor-secundaria);
+  padding: 0 var(--espaco-1);
+}
+
+form p {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-1);
+  margin-bottom: var(--espaco-3);
+}
+
+label { color: var(--cor-texto); }
+
+input,
+select {
+  font-family: var(--fonte-base);
+  font-size: var(--texto-base);
+  max-width: 28rem;
+  padding: var(--espaco-1);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+  background-color: var(--cor-fundo);
+  color: var(--cor-texto);
+}
+
+/* botões de opção lado a lado com o rótulo */
+form p.opcao {
+  flex-direction: row;
+  align-items: center;
+  gap: var(--espaco-1);
+  margin-bottom: var(--espaco-1);
+}
+
+input[type="radio"] {
+  width: 1.1rem;
+  height: 1.1rem;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  accent-color: var(--cor-primaria);
+}
+
+button {
+  align-self: flex-start;
+  font-family: var(--fonte-base);
+  font-size: var(--texto-base);
+  padding: var(--espaco-2) var(--espaco-4);
+  border: none;
+  border-radius: var(--raio);
+  background-color: var(--cor-primaria);
+  color: var(--cor-fundo);
+  cursor: pointer;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease, transform 0.1s ease;
+}
+
+/* ponteiro sobre o botão: escurece e ganha sombra */
+button:hover {
+  background-color: var(--cor-secundaria);
+  box-shadow: 0 2px 6px rgba(28, 27, 31, 0.25);
+}
+
+/* botão pressionado: afunda 1px e perde a sombra */
+button:active {
+  transform: translateY(1px);
+  box-shadow: none;
+}
+
+/* botão desativado: perde cor, sombra e o cursor de clique */
+button:disabled {
+  background-color: var(--cor-borda);
+  color: var(--cor-texto-suave);
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+/* --- FEEDBACK VISUAL DO FORMULÁRIO --- */
+
+input,
+select {
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* campo em uso */
+input:focus,
+select:focus {
+  border-color: var(--cor-primaria);
+}
+
+/* erro: só depois que a pessoa mexeu no campo */
+input:user-invalid,
+select:user-invalid {
+  border-color: var(--cor-erro);
+  box-shadow: 0 0 0 3px rgba(179, 38, 30, 0.15);
+}
+
+/* sucesso: campo preenchido dentro do formato */
+input:user-valid,
+select:user-valid {
+  border-color: var(--cor-secundaria);
+  box-shadow: 0 0 0 3px rgba(47, 107, 76, 0.15);
+}
+
+.mensagem-erro {
+  display: block;
+  color: var(--cor-erro);
+  font-size: var(--texto-base);
+}
+
+input[aria-invalid="true"],
+select[aria-invalid="true"] {
+  border-color: var(--cor-erro);
+}
+
+/* --- ETIQUETAS (badges) --- */
+
+.etiqueta {
+  align-self: flex-start;
+  margin-bottom: var(--espaco-2);
+  padding: 0.125rem var(--espaco-2);
+  border-radius: 999px;
+  font-size: var(--texto-base);
+  color: var(--cor-fundo);
+}
+
+.etiqueta-educacao { background-color: var(--cor-primaria); }
+.etiqueta-alimentacao { background-color: var(--cor-secundaria); }
+.etiqueta-capacitacao { background-color: var(--cor-texto-suave); }
+
+/* --- CAIXAS DE ALERTA --- */
+
+.alerta {
+  padding: var(--espaco-2) var(--espaco-3);
+  border-left: 4px solid;
+  border-radius: var(--raio);
+  color: var(--cor-texto);
+}
+
+.alerta-info {
+  border-color: var(--cor-primaria);
+  background-color: rgba(168, 61, 116, 0.08);
+}
+
+.alerta-sucesso {
+  border-color: var(--cor-secundaria);
+  background-color: rgba(47, 107, 76, 0.08);
+}
+
+.alerta-erro {
+  border-color: var(--cor-erro);
+  background-color: rgba(179, 38, 30, 0.08);
+}
+
+/* --- MODAL (aberto por classe, controlada pelo módulo modal.js) --- */
+
+.modal {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--espaco-3);
+  background-color: rgba(28, 27, 31, 0.6);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+
+/* o modal abre quando o JavaScript aplica a classe */
+.modal.aberto {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal-caixa {
+  max-width: 34rem;
+  padding: var(--espaco-4);
+  border-radius: var(--raio);
+  background-color: var(--cor-fundo);
+  box-shadow: 0 8px 24px rgba(28, 27, 31, 0.3);
+  transform: translateY(-1rem);
+  transition: transform 0.25s ease;
+}
+
+.modal.aberto .modal-caixa {
+  transform: translateY(0);
+}
+
+.modal-caixa h2 {
+  margin-top: 0;
+}
+
+.modal-fechar {
+  display: inline-block;
+  padding: var(--espaco-1) var(--espaco-3);
+  border-radius: var(--raio);
+  background-color: var(--cor-primaria);
+  color: var(--cor-fundo);
+  text-decoration: none;
+  transition: background-color 0.2s ease;
+}
+
+.modal-fechar:hover,
+.modal-fechar:focus {
+  background-color: var(--cor-secundaria);
+  color: var(--cor-fundo);
+}
+
+/* rodapé */
+
+footer {
+  max-width: none;
+  padding: var(--espaco-4) var(--espaco-3);
+  border-top: 1px solid var(--cor-borda);
+  background-color: var(--cor-fundo-alt);
+  color: var(--cor-texto);
+}
+
+footer p {
+  max-width: var(--largura-maxima);
+  margin: 0 auto;
+}
+
+/* endereço de contato */
+address {
+  font-style: normal;
+  color: var(--cor-texto);
+}
+
+/* ---------- 6. FOCO VISÍVEL (acessibilidade) ---------- */
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+  outline: 2px solid var(--cor-primaria);
+  outline-offset: 2px;
+}
+
+/* ---------- 7. BLOCOS DA GRADE DE 12 COLUNAS ---------- */
+
+.bloco-destaque {
+  background-color: var(--cor-fundo-alt);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+  padding: var(--espaco-3);
+}
+
+/* ============================================================
+   PONTOS DE QUEBRA - cinco cenários adaptativos
+   Abordagem mobile-first: a base vale para o celular pequeno
+   e cada @media acrescenta comportamento em telas maiores.
+   ============================================================ */
+
+/* 1. Celular grande - 480px: mais respiro lateral e campos mais largos */
+@media (min-width: 480px) {
+  header,
+  main,
+  footer { padding-inline: var(--espaco-4); }
+
+  input:not([type="radio"]),
+  select { width: 100%; }
+}
+
+/* 2. Tablet - 768px: menu horizontal com dropdown e cartões em 6 colunas */
+@media (min-width: 768px) {
+  .grade-cards > section,
+  .grade-cards > article { grid-column: span 6; }
+
+  main { padding-block: var(--espaco-5); }
+
+  /* o hambúrguer some e o menu volta a ficar sempre visível */
+  .botao-hamburguer { display: none; }
+
+  nav {
+    flex-basis: auto;
+    max-height: none;
+    overflow: visible;
+  }
+
+  nav > ul {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  /* o item que tem submenu vira referência de posicionamento */
+  .tem-submenu { position: relative; }
+
+  /* submenu escondido por padrão, sobreposto ao conteúdo */
+  .submenu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 10;
+    min-width: 13rem;
+    padding: var(--espaco-1);
+    border: 1px solid var(--cor-borda);
+    border-radius: var(--raio);
+    background-color: var(--cor-fundo);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-0.5rem);
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+  }
+
+  /* abre no ponteiro do mouse e também na navegação por teclado */
+  .tem-submenu:hover > .submenu,
+  .tem-submenu:focus-within > .submenu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+}
+
+/* 3. Desktop - 1024px: cartões em 4 colunas e blocos assimétricos da grade */
+@media (min-width: 1024px) {
+  .grade-cards > section,
+  .grade-cards > article { grid-column: span 4; }
+
+  main > .col-8 { grid-column: span 8; }
+  main > .col-6 { grid-column: span 6; }
+  main > .col-4 { grid-column: span 4; }
+}
+
+/* 4. Desktop grande - 1280px: área de conteúdo mais larga e gap maior */
+@media (min-width: 1280px) {
+  :root { --largura-maxima: 1200px; }
+
+  main { gap: var(--espaco-5) var(--espaco-4); }
+}
+
+/* 5. Panorâmico - 1440px: largura máxima final e respiro vertical ampliado */
+@media (min-width: 1440px) {
+  :root { --largura-maxima: 1320px; }
+
+  main { padding-block: var(--espaco-6); }
+}
