@@ -5,6 +5,7 @@
    ========================================================= */
 
 import { Templates } from "./templates.js";
+import { Menu } from "./menu.js";
 
 export const Navegacao = {
 
@@ -32,6 +33,12 @@ export const Navegacao = {
 
   /* desenha a tela correspondente dentro do contêiner da aplicação */
   desenhar() {
+    /* âncoras comuns, como o #app do link de atalho, não são rotas:
+       o roteador ignora tudo que não comece por #/ e deixa o
+       navegador fazer o salto nativo para o elemento */
+    const bruto = window.location.hash;
+    if (bruto !== "" && !bruto.startsWith("#/")) return;
+
     const destino = Navegacao.lerEndereco();
     const rota = Navegacao.rotas[destino.nome] || Navegacao.rotaDesconhecida;
 
@@ -94,12 +101,9 @@ export const Navegacao = {
     titulo.focus({ preventScroll: true });
   },
 
-  /* no celular o menu fica aberto pelo checkbox: fecha ao trocar de tela */
+  /* o menu do celular fecha ao trocar de tela */
   fecharMenuMobile() {
-    const alternador = document.getElementById("abrir-menu");
-    if (alternador) {
-      alternador.checked = false;
-    }
+    Menu.fechar();
   },
 
   iniciar() {

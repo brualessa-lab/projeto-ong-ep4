@@ -49,6 +49,30 @@
 
 /* ---------- 2. BASE ---------- */
 
+.pular-para-conteudo {
+  position: absolute;
+  top: var(--espaco-1);
+  left: var(--espaco-1);
+  z-index: 200;
+  padding: var(--espaco-1) var(--espaco-2);
+  border-radius: var(--raio);
+  background-color: var(--cor-primaria);
+  color: var(--cor-fundo);
+  text-decoration: none;
+  transform: translateY(-200%);
+  transition: transform 0.2s ease;
+}
+
+/* só aparece quando alguém chega nele pelo teclado */
+.pular-para-conteudo:focus {
+  transform: translateY(0);
+}
+
+/* o contentor das telas recebe foco pelo atalho, sem contorno */
+#app:focus {
+  outline: none;
+}
+
 /* conteúdo disponível ao leitor de tela e invisível na página */
 .apenas-leitor {
   position: absolute;
@@ -174,14 +198,9 @@ header > a {
 
 /* --- NAVEGAÇÃO: base mobile com menu hambúrguer --- */
 
-/* o checkbox fica fora da tela, mas continua acessível pelo teclado */
-.alternador-menu {
-  position: absolute;
-  opacity: 0;
-  pointer-events: none;
-}
-
 .botao-hamburguer {
+  font-family: var(--fonte-base);
+  font-size: var(--texto-base);
   padding: var(--espaco-1) var(--espaco-2);
   border: 1px solid var(--cor-borda);
   border-radius: var(--raio);
@@ -190,7 +209,7 @@ header > a {
   user-select: none;
 }
 
-.alternador-menu:focus-visible + .botao-hamburguer {
+.botao-hamburguer:focus-visible {
   outline: 2px solid var(--cor-primaria);
   outline-offset: 2px;
 }
@@ -203,8 +222,8 @@ nav {
   transition: max-height 0.3s ease;
 }
 
-/* o checkbox marcado abre o menu */
-.alternador-menu:checked ~ nav {
+/* o botão aplica a classe e o menu abre */
+nav.aberto {
   max-height: 30rem;
 }
 
