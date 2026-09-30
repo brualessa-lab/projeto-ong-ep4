@@ -200,9 +200,10 @@ export const Templates = {
 
   modalDados() {
     return `
-      <div id="modal-dados" class="modal">
+      <div id="modal-dados" class="modal" role="dialog" aria-modal="true"
+           aria-labelledby="titulo-modal-dados">
         <section class="modal-caixa">
-          <h2>Como usamos seus dados</h2>
+          <h2 id="titulo-modal-dados">Como usamos seus dados</h2>
           <p>
             Os dados do cadastro ficam com a equipe do Instituto Semear e servem para
             enviar a prestação de contas aos doadores e para combinar os turnos com os
