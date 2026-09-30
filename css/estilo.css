@@ -505,6 +505,18 @@ address {
 
 /* ---------- 6. FOCO VISÍVEL (acessibilidade) ---------- */
 
+/* o título da tela recebe foco por código a cada troca de rota,
+   para o leitor de tela começar do lugar certo. O contorno fica
+   reservado ao foco vindo do teclado. */
+#app h1:focus {
+  outline: none;
+}
+
+#app h1:focus-visible {
+  outline: 2px solid var(--cor-primaria);
+  outline-offset: 4px;
+}
+
 a:focus-visible,
 button:focus-visible,
 input:focus-visible,
