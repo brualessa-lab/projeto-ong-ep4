@@ -1,0 +1,71 @@
+# =========================================================
+# deploy.yml — publica a aplicação no GitHub Pages.
+#
+# Dispara a cada push na main, que é a branch de produção no
+# fluxo GitFlow deste projeto. O que vai para o ar é a pasta
+# dist, gerada pelo Vite, e não o código-fonte: assim o site
+# recebe o JavaScript empacotado e o CSS minificado.
+# =========================================================
+
+name: Deploy para o GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  # permite publicar manualmente pela aba Actions
+  workflow_dispatch:
+
+# permissões mínimas de que o deploy precisa
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# dois pushes seguidos não publicam ao mesmo tempo; o segundo
+# espera o primeiro terminar, para não embaralhar as versões
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+
+  construir:
+    name: Construir
+    runs-on: ubuntu-latest
+    steps:
+      - name: Obter o código
+        uses: actions/checkout@v4
+
+      - name: Preparar o Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Instalar as dependências
+        # npm ci instala exatamente as versões do package-lock,
+        # garantindo que o build do servidor é igual ao local
+        run: npm ci
+
+      - name: Gerar o build de produção
+        run: npm run build
+
+      - name: Configurar o Pages
+        uses: actions/configure-pages@v5
+
+      - name: Enviar a pasta dist
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  publicar:
+    name: Publicar
+    needs: construir
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.publicacao.outputs.page_url }}
+    steps:
+      - name: Publicar no GitHub Pages
+        id: publicacao
+        uses: actions/deploy-pages@v4
