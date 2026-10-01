@@ -99,8 +99,14 @@
   --cor-fundo-modal: rgba(0, 0, 0, 0.7);
 }
 
-/* o botão de tema acompanha o cabeçalho */
+/* o botão de tema é o último item do menu */
+.item-tema {
+  display: flex;
+  align-items: center;
+}
+
 .botao-tema {
+  white-space: nowrap;
   font-family: var(--fonte-base);
   font-size: var(--texto-base);
   padding: var(--espaco-1) var(--espaco-2);
@@ -661,6 +667,14 @@ select:focus-visible {
   nav > ul {
     flex-direction: row;
     flex-wrap: wrap;
+    align-items: center;
+  }
+
+  /* separa o botão de tema dos links de navegação */
+  .item-tema {
+    margin-left: var(--espaco-2);
+    padding-left: var(--espaco-2);
+    border-left: 1px solid var(--cor-borda);
   }
 
   /* o item que tem submenu vira referência de posicionamento */

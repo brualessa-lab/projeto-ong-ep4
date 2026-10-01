@@ -13,13 +13,12 @@
 
   <header>
     <a href="#/inicio">
-      <img src="../imagens/logo-instituto-semear.png" alt="Logotipo do Instituto Semear" width="64" height="64">
+      <picture>
+        <source srcset="../imagens/logo-instituto-semear.webp" type="image/webp">
+        <img src="../imagens/logo-instituto-semear.png" alt="Logotipo do Instituto Semear" width="64" height="64">
+      </picture>
       Instituto Semear
     </a>
-
-    <button type="button" id="botao-tema" class="botao-tema" aria-pressed="false">
-      &#9790; Modo escuro
-    </button>
 
     <button type="button" id="botao-menu" class="botao-hamburguer"
             aria-expanded="false" aria-controls="menu-principal">
@@ -40,6 +39,12 @@
         </li>
 
         <li><a href="#/cadastro" data-rota="cadastro">Participe</a></li>
+
+        <li class="item-tema">
+          <button type="button" id="botao-tema" class="botao-tema" aria-pressed="false">
+            &#9790; Modo escuro
+          </button>
+        </li>
       </ul>
     </nav>
   </header>
