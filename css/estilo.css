@@ -25,6 +25,12 @@
   /* Cor de estado */
   --cor-erro: #B3261E;
 
+  /* Fundos translúcidos derivados das cores acima */
+  --fundo-alerta-info: rgba(168, 61, 116, 0.08);
+  --fundo-alerta-sucesso: rgba(47, 107, 76, 0.08);
+  --fundo-alerta-erro: rgba(179, 38, 30, 0.08);
+  --cor-fundo-modal: rgba(28, 27, 31, 0.6);
+
   /* Tipografia: escala modular de razão 1,2 a partir de 16px */
   --fonte-base: "Segoe UI", Arial, Helvetica, sans-serif;
   --texto-base: 1rem;      /* 16px   - corpo */
@@ -45,6 +51,73 @@
   /* Layout */
   --largura-maxima: 1080px;
   --raio: 8px;
+}
+
+/* ---------- 1b. TEMA ESCURO ----------
+   Os mesmos nomes de variável recebem valores novos. Nenhuma regra
+   de layout muda: tudo que usa var() acompanha automaticamente.
+
+   A troca acontece de dois modos. Por padrão a aplicação segue a
+   preferência do sistema operativo, lida por prefers-color-scheme.
+   Quando a pessoa escolhe um tema pelo botão, o atributo data-tema
+   entra no html e passa a mandar, guardado no localStorage.
+   -------------------------------------- */
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-tema="claro"]) {
+    --cor-primaria: #E79AC7;
+    --cor-primaria-clara: #8E3C66;
+    --cor-secundaria: #7FC9A0;
+    --cor-secundaria-clara: #2F6B4C;
+    --cor-texto: #F3F0F7;
+    --cor-texto-suave: #D5CEDD;
+    --cor-borda: #8A8194;
+    --cor-fundo: #16141C;
+    --cor-fundo-alt: #211E2A;
+    --cor-erro: #FF8A80;
+    --fundo-alerta-info: rgba(231, 154, 199, 0.12);
+    --fundo-alerta-sucesso: rgba(127, 201, 160, 0.12);
+    --fundo-alerta-erro: rgba(255, 138, 128, 0.12);
+    --cor-fundo-modal: rgba(0, 0, 0, 0.7);
+  }
+}
+
+:root[data-tema="escuro"] {
+  --cor-primaria: #E79AC7;
+  --cor-primaria-clara: #8E3C66;
+  --cor-secundaria: #7FC9A0;
+  --cor-secundaria-clara: #2F6B4C;
+  --cor-texto: #F3F0F7;
+  --cor-texto-suave: #D5CEDD;
+  --cor-borda: #8A8194;
+  --cor-fundo: #16141C;
+  --cor-fundo-alt: #211E2A;
+  --cor-erro: #FF8A80;
+  --fundo-alerta-info: rgba(231, 154, 199, 0.12);
+  --fundo-alerta-sucesso: rgba(127, 201, 160, 0.12);
+  --fundo-alerta-erro: rgba(255, 138, 128, 0.12);
+  --cor-fundo-modal: rgba(0, 0, 0, 0.7);
+}
+
+/* o botão de tema acompanha o cabeçalho */
+.botao-tema {
+  font-family: var(--fonte-base);
+  font-size: var(--texto-base);
+  padding: var(--espaco-1) var(--espaco-2);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+  background-color: var(--cor-fundo);
+  color: var(--cor-texto);
+  cursor: pointer;
+}
+
+.botao-tema:hover {
+  background-color: var(--cor-fundo-alt);
+}
+
+.botao-tema:focus-visible {
+  outline: 2px solid var(--cor-primaria);
+  outline-offset: 2px;
 }
 
 /* ---------- 2. BASE ---------- */
@@ -429,17 +502,17 @@ select[aria-invalid="true"] {
 
 .alerta-info {
   border-color: var(--cor-primaria);
-  background-color: rgba(168, 61, 116, 0.08);
+  background-color: var(--fundo-alerta-info);
 }
 
 .alerta-sucesso {
   border-color: var(--cor-secundaria);
-  background-color: rgba(47, 107, 76, 0.08);
+  background-color: var(--fundo-alerta-sucesso);
 }
 
 .alerta-erro {
   border-color: var(--cor-erro);
-  background-color: rgba(179, 38, 30, 0.08);
+  background-color: var(--fundo-alerta-erro);
 }
 
 /* --- MODAL (aberto por classe, controlada pelo módulo modal.js) --- */
@@ -455,7 +528,7 @@ select[aria-invalid="true"] {
   align-items: center;
   justify-content: center;
   padding: var(--espaco-3);
-  background-color: rgba(28, 27, 31, 0.6);
+  background-color: var(--cor-fundo-modal);
   opacity: 0;
   visibility: hidden;
   transition: opacity 0.25s ease, visibility 0.25s ease;
