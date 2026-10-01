@@ -139,6 +139,15 @@ Todo acesso ao `localStorage` passa por `try/catch`: em janela anônima ou com a
 - Foco visível pelo teclado, com `:focus-visible`
 - Na troca de tela: o foco vai para o `h1`, uma região `aria-live` anuncia a mudança e o título da aba é atualizado
 - O menu funciona por teclado, e o submenu abre também por `:focus-within`
+- Link de atalho para saltar a navegação, visível ao receber foco
+- Modal com `role="dialog"`, foco preso enquanto aberto e devolvido ao fechar
+- Botão do menu com `aria-expanded` e `aria-controls`
+
+### Tema claro e escuro
+
+A aplicação segue por padrão a preferência do sistema operativo, lida pelo CSS com `prefers-color-scheme`. O botão no cabeçalho permite escolher manualmente, e a escolha é guardada no `localStorage` em `semear:tema`, passando a valer nas visitas seguintes.
+
+A troca é feita apenas por variáveis: os mesmos nomes recebem valores novos, e nenhuma regra de layout muda. Os dois temas foram medidos pela WCAG — no escuro, o texto fica em 16,2:1 e as cores de apoio acima de 8:1.
 
 ---
 
