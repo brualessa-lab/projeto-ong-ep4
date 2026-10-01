@@ -1,0 +1,5 @@
+# dependências instaladas pelo npm
+node_modules/
+
+# resultado do build, gerado pelo comando npm run build
+dist/
