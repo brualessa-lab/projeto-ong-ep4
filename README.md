@@ -195,6 +195,19 @@ Todo acesso ao `localStorage` passa por `try/catch`: em janela anônima ou com a
 - Modal com `role="dialog"`, foco preso enquanto aberto e devolvido ao fechar
 - Botão do menu com `aria-expanded` e `aria-controls`
 
+### Verificação com leitor de tela
+
+A navegação foi percorrida com o Narrador do Windows, no site publicado, em quatro pontos:
+
+| O que foi verificado | Resultado |
+|---|---|
+| Link de atalho | Primeira parada do `Tab`, anunciado como link |
+| Troca de tela | O nome da tela nova é lido sozinho, pela região `aria-live` |
+| Modal | Anunciado como caixa de diálogo, com o `Tab` circulando dentro dele e `Esc` devolvendo o foco |
+| Botão de tema | O estado pressionado é falado, pelo `aria-pressed` |
+
+Numa SPA a página nunca recarrega, então o navegador não avisa que a tela mudou. O segundo item é o que confirma que a região `aria-live` cobre essa lacuna.
+
 ### Tema claro e escuro
 
 A aplicação segue por padrão a preferência do sistema operativo, lida pelo CSS com `prefers-color-scheme`. O botão no cabeçalho permite escolher manualmente, e a escolha é guardada no `localStorage` em `semear:tema`, passando a valer nas visitas seguintes.
