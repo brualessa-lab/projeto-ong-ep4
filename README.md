@@ -4,7 +4,7 @@ Plataforma web de uma organização do terceiro setor, construída como aplicaç
 
 O site apresenta a ONG, divulga os projetos sociais e recebe cadastros de doadores e voluntários, com validação e persistência no próprio navegador.
 
-**Site publicado:** https://brualessa-lab.github.io/projeto-ong-ep4/html/
+**Site publicado:** https://brualessa-lab.github.io/projeto-ong-ep4/
 
 > Projeto acadêmico. O Instituto Semear é uma organização fictícia, e os dados de contato usam o domínio `example.org`, reservado para documentação.
 
@@ -15,6 +15,8 @@ O site apresenta a ONG, divulga os projetos sociais e recebe cadastros de doador
 - [Tecnologias](#tecnologias)
 - [Estrutura de pastas](#estrutura-de-pastas)
 - [Como executar localmente](#como-executar-localmente)
+- [Build de produção](#build-de-produção)
+- [Deploy](#deploy)
 - [Como a aplicação funciona](#como-a-aplicação-funciona)
 - [Acessibilidade](#acessibilidade)
 - [Fluxo de versionamento](#fluxo-de-versionamento)
@@ -29,11 +31,14 @@ O site apresenta a ONG, divulga os projetos sociais e recebe cadastros de doador
 |---|---|
 | HTML5 semântico | Casca da aplicação e marcação gerada pelos templates |
 | CSS3 | Design system com 25 variáveis, CSS Grid de 12 colunas, Flexbox e 5 pontos de quebra |
-| JavaScript (ES Modules) | 921 linhas em 9 arquivos, sem framework |
+| JavaScript (ES Modules) | 1.114 linhas em 11 arquivos, sem framework |
 | [IMask 7.6.1](https://imask.js.org/) | Máscaras de CPF, telefone e CEP, carregada por CDN |
+| [Vite 7](https://vite.dev/) | Empacotamento e minificação do build de produção |
+| [sharp](https://sharp.pixelplumbing.com/) | Conversão das imagens para WebP |
+| GitHub Actions | Build e publicação automáticos |
 | GitHub Pages | Hospedagem |
 
-Sem dependências de build e sem `node_modules`: o navegador carrega os módulos diretamente.
+Vite e sharp são dependências de desenvolvimento: entram apenas na geração do build. O código que vai para o navegador continua sem framework.
 
 ---
 
@@ -55,10 +60,21 @@ projeto-ong-ep4/
 │       ├── validacao.js    Regras de consistência (CPF, telefone, CEP, idade)
 │       ├── armazenamento.js  Leitura e gravação no localStorage
 │       ├── formulario.js   Eventos e envio do cadastro
-│       └── mascaras.js     Acoplagem da biblioteca IMask
-└── imagens/
-    └── logo-instituto-semear.png
+│       ├── mascaras.js     Acoplagem da biblioteca IMask
+│       ├── menu.js         Abertura do menu no celular
+│       └── tema.js         Alternância entre o tema claro e o escuro
+├── imagens/
+│   ├── logo-instituto-semear.png   Reserva, para navegadores sem WebP
+│   └── logo-instituto-semear.webp  Servido aos navegadores atuais
+├── .github/
+│   └── workflows/
+│       └── deploy.yml      Build e publicação automáticos no Pages
+├── vite.config.js          Configuração do empacotador
+├── converter-imagens.mjs   Geração dos arquivos WebP
+└── package.json            Dependências e comandos
 ```
+
+A pasta `dist/`, criada pelo build, fica fora do versionamento: o conteúdo dela é gerado de novo a cada publicação.
 
 Cada pasta guarda um tipo de arquivo, e cada módulo trata de um assunto só. Nenhum módulo invade a responsabilidade do vizinho: o `formulario.js` nunca chama `localStorage` diretamente, e o `validacao.js` nunca desenha nada na tela.
 
@@ -68,25 +84,61 @@ Cada pasta guarda um tipo de arquivo, e cada módulo trata de um assunto só. Ne
 
 A aplicação usa ES Modules (`import` / `export`), e o navegador bloqueia esse carregamento quando o arquivo é aberto direto do disco, por política de CORS. **É necessário servir a pasta por HTTP.**
 
-### Com Python
+### Com o Vite
+
+```bash
+npm install
+npm run dev
+```
+
+O endereço aparece no terminal, e o navegador recarrega sozinho a cada arquivo salvo.
+
+### Sem instalar nada
+
+Qualquer servidor estático serve o código-fonte como está, porque a aplicação não depende de nenhuma etapa de compilação para funcionar:
 
 ```bash
 python -m http.server 8000
 ```
 
-### Com Node.js
+Depois abra `http://localhost:8000/html/index.html`.
+
+A única dependência externa, a IMask, vem de CDN e exige conexão com a internet. Sem ela, o formulário continua funcionando: a validação é nativa, e apenas a pontuação deixa de ser escrita automaticamente.
+
+---
+
+## Build de produção
 
 ```bash
-npx serve .
+npm run build
 ```
 
-Depois abra:
+O comando faz duas coisas. Primeiro o `converter-imagens.mjs` gera a versão WebP de cada PNG da pasta `imagens`. Depois o Vite junta os módulos JavaScript num arquivo só, minifica o CSS e escreve tudo em `dist/`, com um resumo do conteúdo no nome dos arquivos para o cache do navegador saber quando algo mudou.
 
-```
-http://localhost:8000/html/index.html
+| Recurso | Antes | Depois |
+|---|---|---|
+| CSS | 17.965 bytes | 10.934 bytes |
+| JavaScript | 38.044 bytes em 10 arquivos | 20.257 bytes em 1 arquivo |
+| Logotipo | 6.924 bytes | 2.006 bytes |
+| Requisições | 13 | 4 |
+
+Para conferir o resultado antes de publicar:
+
+```bash
+npm run preview
 ```
 
-Nenhuma instalação de dependências é necessária. A única dependência externa, a IMask, vem de CDN e exige conexão com a internet. Sem ela, o formulário continua funcionando: a validação é nativa, e apenas a pontuação deixa de ser escrita automaticamente.
+---
+
+## Deploy
+
+A publicação é automática. Todo push na `main` dispara o workflow `.github/workflows/deploy.yml`, que instala as dependências com `npm ci`, roda o build e envia a pasta `dist/` para o GitHub Pages.
+
+O Pages está configurado com a origem **GitHub Actions**, e não com uma branch. Por isso o endereço publicado aponta direto para a raiz do site, sem `/html/` no caminho.
+
+A aba **Actions** do repositório mostra cada publicação, com o registro de cada etapa. Um build que falhe interrompe o processo antes de publicar, e o site no ar continua sendo o da última versão que passou.
+
+Para publicar fora de um push, a mesma aba oferece o botão **Run workflow**.
 
 ---
 
@@ -157,7 +209,7 @@ O repositório segue o GitFlow.
 
 | Branch | Papel |
 |---|---|
-| `main` | Somente versões em produção. É a origem do GitHub Pages |
+| `main` | Somente versões em produção. Cada push aqui dispara o deploy |
 | `develop` | Integração do trabalho em andamento. Branch padrão do repositório |
 | `feature/*` | Uma funcionalidade nova, criada a partir de `develop` |
 | `fix/*` | Correção de defeito |
